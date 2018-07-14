@@ -21,32 +21,33 @@ namespace WebApplicationNeo4j
             List<MovieDim> Movies = conn.SearchMovies(this.TextBox1.Text);
             if (Movies.Count() == 1)
             {
-                int MovieSK = Movies[0].MovieSK;
-                //find the rating of the movie
-                double Rating = conn.Rating(MovieSK);
-
-                //find movies with similar rating
-                List<MovieDim> SimilarMovies = conn.SimilarMovies(Rating);
-
-                //find movies rated by same users
-                List<MovieDim> SimilarUserMovie = conn.SimilarUserMovies(MovieSK, Rating);
-
-                //find movies in same genre 
-                List<MovieDim> SameGenreMovies = conn.SameGenreMovies(MovieSK);
-
-                //find movies that has similar tags based on tag relevance
-                List<MovieDim> SameTagMovies = conn.SameTagMovies(MovieSK);
-
-                //add label
-                this.Label1.Text = Movies[0].Title;                
+                Response.Redirect("NeoInfo.aspx?sk=" + Movies[0].MovieSK);                
             }
             else
             {
-                //add the items to a list
-                //display the list, once clicked on the list - do everything in else part
+                this.Label1.Text = "Select your movie from matches: ";
+
+                //add the items to the panel
+                for (int i = 0; i < Movies.Count; i++)
+                {
+                    Button lButton = new Button();
+                    lButton.ID = Movies[i].MovieSK.ToString();
+                    lButton.Text = Movies[i].Title;
+                    lButton.CssClass = "silentButton";
+                    lButton.Click += new EventHandler(this.LButton_Click);
+                    Panel1.Controls.Add(lButton);
+                    Panel1.Controls.Add(new LiteralControl("<br /><br />"));
+                }
+
+
             }
-
-
         }
+
+        protected void LButton_Click(object sender, EventArgs e)
+        {
+            Button Button = sender as Button;
+            Response.Redirect("http://guides.neo4j.com/sandbox/recommendations");
+        }
+
     }
 }

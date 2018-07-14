@@ -51,7 +51,6 @@ C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\b
 C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\bin\roslyn\VBCSCompiler.exe.config
 C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\obj\Debug\WebApplicationNeo4j.csprojAssemblyReference.cache
 C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\obj\Debug\WebApplicationNeo4j.csproj.CoreCompileInputs.cache
 C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\obj\Debug\WebApplicationNeo4j.csproj.CopyComplete
 C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\obj\Debug\WebApplicationNeo4j.dll

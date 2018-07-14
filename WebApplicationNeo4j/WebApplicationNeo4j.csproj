@@ -92,12 +92,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dummy.aspx" />
+    <Content Include="img\neo4j_logo.png" />
     <Content Include="Index.aspx" />
-    <Content Include="Web.config" />
+    <Content Include="Index.css" />
+    <Content Include="NeoInfo.aspx" />
+    <Content Include="NeoInfo.css" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectNeo4j.cs" />
     <Compile Include="Definitions.cs" />
+    <Compile Include="dummy.aspx.cs">
+      <DependentUpon>dummy.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dummy.aspx.designer.cs">
+      <DependentUpon>dummy.aspx</DependentUpon>
+    </Compile>
     <Compile Include="GraphConfig.cs" />
     <Compile Include="Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
@@ -105,6 +119,13 @@
     </Compile>
     <Compile Include="Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NeoInfo.aspx.cs">
+      <DependentUpon>NeoInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NeoInfo.aspx.designer.cs">
+      <DependentUpon>NeoInfo.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -117,6 +138,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
