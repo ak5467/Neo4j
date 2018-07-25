@@ -66,3 +66,4 @@ C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\b
 C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\bin\Neo4jClient.pdb
 C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\bin\Neo4jClient.xml
 C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\bin\Newtonsoft.Json.xml
+C:\Users\horcrux\Documents\Summer_2018\WebApplicationNeo4j\WebApplicationNeo4j\obj\Debug\WebApplicationNeo4j.csprojAssemblyReference.cache

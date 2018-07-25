@@ -18,6 +18,7 @@ namespace WebApplicationNeo4j
         protected void Page_Load(object sender, EventArgs e)
         {
             int MovieSK = Convert.ToInt32(Request.QueryString["sk"]);
+            int UserSK = Convert.ToInt32(Request.QueryString["user"]);
 
             //get a new connection
             conn.Connection();
@@ -34,9 +35,9 @@ namespace WebApplicationNeo4j
             DisplayMovieInfo(Movie, Rating);
 
             //find movies with similar rating
-            List<MovieDim> SimilarMovies = conn.SimilarMovies(Rating, GenreArray[0], MovieSK);
+            List<MovieDim> UserProfileMovies = conn.MoviesBasedOnUserProfile(UserSK);
             //display movies of similar rating
-            DisplaySimilarRating(SimilarMovies);
+            DisplayBasedUserProfile(UserProfileMovies);
 
             //find movies rated by same users
             List<MovieDim> SimilarUserMovie = conn.SimilarUserMovies(MovieSK, Rating);
@@ -49,9 +50,9 @@ namespace WebApplicationNeo4j
             DisplaySameGenreMovies(SameGenreMovies);
 
             //find movies that has similar tags based on tag relevance
-            List<MovieDim> SameTagMovies = conn.SameTagMovies(MovieSK);
+            List<MovieDim> SameWeightMovies = conn.SimilarWeightedMovie(MovieSK);
             //display movies that has similar tags based on tag relevance
-            DisplaySameTagMovies(SameTagMovies);
+            DisplaySimilarWeightedMovie(SameWeightMovies);
         }
 
         public void DisplayMovieInfo(MovieDim Movie, double Rating)
@@ -102,12 +103,12 @@ namespace WebApplicationNeo4j
         }
 
         /*display movies of similar rating*/
-        public void DisplaySimilarRating(List<MovieDim> Movies)
+        public void DisplayBasedUserProfile(List<MovieDim> Movies)
         {
             //adding heading
             moviePanel2.Controls.Add(new LiteralControl("<br /><br />"));
             Label l1 = new Label();
-            l1.Text = "Here are some movies with similar rating and genre for you:";
+            l1.Text = "Here are some movies based on the user profile:";
             l1.CssClass = "headings";
             moviePanel2.Controls.Add(l1);
             moviePanel2.Controls.Add(new LiteralControl("<br /><br /><br />"));
@@ -116,12 +117,11 @@ namespace WebApplicationNeo4j
             for(int i=0; i<Movies.Count; i++)
             {
                 Label label = new Label();
-                label.Text = (i + 1) + ". " +Movies[i].Title + " (Imdb Link: http://www.imdb.com/title/tt0"+Movies[i].ImdbId + "/)";
+                label.Text = (i + 1) + ". " +Movies[i].Title;
                 label.CssClass = "labelStyle";
                 moviePanel2.Controls.Add(label);
                 moviePanel2.Controls.Add(new LiteralControl("<br /><br />"));
-            }
-            
+            }            
             
         }
 
@@ -172,12 +172,12 @@ namespace WebApplicationNeo4j
         }
 
         /*display movies that has similar tags based on tag relevance*/
-        public void DisplaySameTagMovies(List<MovieDim> Movies)
+        public void DisplaySimilarWeightedMovie(List<MovieDim> Movies)
         {
             //adding heading
             moviePanel5.Controls.Add(new LiteralControl("<br /><br />"));
             Label l1 = new Label();
-            l1.Text = "Below are few movies that have similar tags by users:";
+            l1.Text = "Similar movies based on weighted score:";
             l1.CssClass = "headings";
             moviePanel5.Controls.Add(l1);
             moviePanel5.Controls.Add(new LiteralControl("<br /><br /><br />"));

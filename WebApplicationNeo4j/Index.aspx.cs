@@ -19,9 +19,10 @@ namespace WebApplicationNeo4j
         protected void Button1_Click(object sender, EventArgs e)
         {
             List<MovieDim> Movies = conn.SearchMovies(this.TextBox1.Text);
+            var userSK = String.IsNullOrEmpty(this.TextBox2.Text) ? "56" : this.TextBox2.Text;
             if (Movies.Count() == 1)
             {
-                Response.Redirect("NeoInfo.aspx?sk=" + Movies[0].MovieSK);                
+                Response.Redirect("NeoInfo.aspx?sk=" + Movies[0].MovieSK + "&user=" + userSK);                
             }
             else
             {

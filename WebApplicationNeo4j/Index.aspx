@@ -15,7 +15,9 @@
     <form id="form1" class="form-wrapper" runat="server">
         <div>
             <br />
-            <asp:TextBox ID="TextBox1" class="textbox" runat="server"></asp:TextBox><br /><br />            
+            <asp:TextBox ID="TextBox2" class="textbox" runat="server" placeholder="Enter User ID"></asp:TextBox><br /><br />  
+            <br />
+            <asp:TextBox ID="TextBox1" class="textbox" runat="server" placeholder="Search Movie"></asp:TextBox><br /><br />            
             <asp:Button ID="Button1" class="button" runat="server" OnClick="Button1_Click" Text="Search" />
             <br /><br />
             <br /><br />

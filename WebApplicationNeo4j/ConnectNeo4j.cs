@@ -71,18 +71,28 @@ namespace WebApplicationNeo4j
             return Convert.ToDouble(Rating[0].rating); 
         }
 
-        public List<MovieDim> SimilarMovies(double Rating, String GenreName, int SK)
-        {            
+        /// <summary>
+        /// returns movies based on user profile selected
+        /// </summary>
+        /// <param name="userSK"></param>
+        /// <returns></returns>
+        public List<MovieDim> MoviesBasedOnUserProfile(int userSK)
+        {
             List<MovieDim> Movies = GraphConfig.GraphClient.Cypher
-                .Match("(f:FactTable)")
-                .With("round(100*avg(f.Rating))/100 as avgRate, f.MovieSK as movieSK")
-                .Match("(f:FactTable)-[:ratedMovie]->(m:MovieDim{MovieSK:movieSK})")
-                .Where("avgRate = {rate}")
-                .With("m as simMov")
-                .Match("(simMov)-[:belongsToGenre]->(g:GenreDim{GenreName:{name}})")
-                .With("simMov where simMov IS NOT NULL and simMov.MovieSK <> {sk}")
-                .WithParams(new { rate = Rating, name = GenreName, sk = SK })
-                .Return<MovieDim>("distinct simMov")
+                .Match("(p1: UserDim { UserSK: {userSK}})< -[x: ratedUser] - (f1: FactTable) -[r1: ratedMovie]->(m: MovieDim) < -[r2: ratedMovie] - (f2: FactTable) -[y: ratedUser]->(p2: UserDim)")
+                .With("count(m) as movieCount, collect(m.MovieSK) as mov, SUM(f1.Rating * f2.Rating) AS xyDotProduct, " +
+                "SQRT(REDUCE(xDot = 0.0, a IN COLLECT(f1.Rating) | xDot + a ^ 2)) AS xLength, " +
+                "SQRT(REDUCE(yDot = 0.0, b IN COLLECT(f2.Rating) | yDot + b ^ 2)) AS yLength, " +
+                "p1, p2")
+                .Where("movieCount> 10")
+                .With("p1, p2, xyDotProduct / (xLength * yLength) as similarity, mov")
+                .OrderByDescending("similarity")
+                .Limit(5)
+                .OptionalMatch("(p2)< -[a: ratedUser] - (f3: FactTable) -[b: ratedMovie]->(m1: MovieDim)")
+                .With("f3.MovieSK as fact_movieSK, mov, m1.MovieSK as movieSK, m1 as Movies")
+                .Where("NOT movieSK IN mov")
+                .WithParam("userSK", userSK)
+                .Return<MovieDim>("Movies")
                 .Limit(5)
                 .Results.ToList();
 
@@ -106,6 +116,12 @@ namespace WebApplicationNeo4j
             return Movies;
         }
 
+        /// <summary>
+        /// returns movies with most common Genres
+        /// 
+        /// </summary>
+        /// <param name="movieSK"></param>
+        /// <returns></returns>
         public List<MovieDim> SameGenreMovies(int movieSK)
         {
 
@@ -114,30 +130,31 @@ namespace WebApplicationNeo4j
                 .With("simMov, collect(g.GenreName) as genre, count(*) as number")
                 .WithParam("SK", movieSK)
                 .OrderByDescending("number")
-                .Return<MovieDim>("distinct simMov")
+                .Return<MovieDim>("simMov")
                 .Limit(5)
                 .Results.ToList();
 
             return Movies;
         }
 
-        public List<MovieDim> SameTagMovies(int movieSK)
+        public List<MovieDim> SimilarWeightedMovie(int movieSK)
         {
 
             List<MovieDim> Movies = GraphConfig.GraphClient.Cypher
-                .Match("(m:MovieDim {MovieSK: {SK}} )-[r:hasATag]->(t:TagDim)")
-                .With("t as tags")
-                .OrderByDescending("r.relevance")
-                .Limit(5)
-                .Match("(tags)<-[r2:hasATag]-(simMov:MovieDim)")
-                .Where("simMov.MovieSK <> {SK} and simMov is Not Null")
+                .Match("(m:MovieDim {MovieSK: {SK}} )")
+                .Match("(m) -[:belongsToGenre]->(g: GenreDim) < -[:belongsToGenre] - (simMov: MovieDim)")
+                .With("m, simMov, COUNT(*) AS gCount")
+                .OptionalMatch("(m)< -[:hasATag] - (a: TagDim) -[:hasATag]->(simMov)")
+                .With("m, simMov, gCount, COUNT(a) AS tCount")
+                .OptionalMatch("(m)< -[:ratedMovie] - (d: FactTable) -[:ratedMovie]->(simMov)")
+                .With("m, simMov, gCount, tCount, COUNT(d) AS rCount")
+                .With("simMov AS movies, (5* gCount)+(2* tCount)+(3* rCount) AS Weight")
                 .WithParam("SK", movieSK)
-                .With("distinct simMov as Movies, r2.relevance as rel")
-                .Return<MovieDim>("Movies")
-                .OrderByDescending("rel")
+                .Return<MovieDim>("movies")
+                .OrderByDescending("Weight")
                 .Limit(5)
                 .Results.ToList();
-
+ 
             return Movies;
         }
     }
